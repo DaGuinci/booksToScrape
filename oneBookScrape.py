@@ -41,12 +41,7 @@ def getBookInfos(productUrl, categoryName):
             description = 'NC'
 
         priceIncl = re.sub('Â£', '', getTableItem(table, 'Price (incl. tax)'))
-        # if len(priceIncl) == 0:
-        #     priceIncl = 'NC'
-
         priceExcl = re.sub('Â£', '', getTableItem(table, 'Price (excl. tax)'))
-        if len(priceExcl) == 0:
-            priceExcl = 'NC'
 
         infos = {
             'product_page_url': productUrl,
