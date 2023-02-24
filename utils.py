@@ -85,4 +85,30 @@ def getOnePageInfos(allBooks, url):
 
             getOnePageInfos(allBooks, nextUrl)
 
+
+# List and proceed every categories url
+def getAllCategoriesBooks(url):
+    r = requests.get(url)
+
+    if r.ok:
+        allBooks = []
+        soup = BeautifulSoup(r.content, 'html.parser')
+
+        # get all the categories urls
+        categoryEntries = soup.find('div', class_='side_categories').findAll('li')
+
+        # Delete the first item, Books, all books without category
+        categoryEntries.pop(0)
+        i = 0
+
+        for entry in categoryEntries:
+            linkTag = entry.find('a')
+            categoryUrl = url + linkTag['href']
+            getOnePageInfos(allBooks, categoryUrl)
+
+            # test any category
+            # if i < 2:
+            #     getOnePageInfos(allBooks, categoryUrl)
+            # i += 1
+
         return allBooks

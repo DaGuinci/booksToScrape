@@ -2,11 +2,9 @@ import utils
 import datetime
 
 # Script launch
-url = 'https://books.toscrape.com/catalogue/category/books/childrens_11/index.html'
+url = 'http://books.toscrape.com/'
 
-allBooks = []
-
-oneCategoryInfos = utils.getOnePageInfos(allBooks, url)
+allBooks = utils.getAllCategoriesBooks(url)
 
 # Write the csv
 date = datetime.datetime.now().strftime('%Y-%m-%d')
@@ -23,8 +21,9 @@ with open('out/' + date + '-oneBookDatas.csv', 'w') as file:
         'review_rating;'
         'image_url\n'
     )
-    for oneBookInfos in oneCategoryInfos:
-        for key, value in oneBookInfos.items():
+    for oneBook in allBooks:
+        # print(type(oneBook))
+        for key, value in oneBook.items():
             file.write(value + ';')
         file.write('\n')
 
