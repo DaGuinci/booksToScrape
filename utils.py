@@ -35,8 +35,10 @@ def getBookInfos(productUrl, categoryName):
 
         if c.select('#product_description'):
             description = c.select('#product_description')[0].find_next('p').string
-            description = description.replace(";", ":")
-            description = description.replace("\n", "")
+            description = description.replace(';', ':')
+            description = description.replace('\n', '')
+            description = description.replace('"', '”')
+
         else:
             description = 'NC'
 
@@ -56,3 +58,31 @@ def getBookInfos(productUrl, categoryName):
             'image_url': c.find('img')['src'].replace('../../', 'http://books.toscrape.com/')
         }
         return infos
+
+def getOnePageInfos(allBooks, url):
+    pageRequest = requests.get(url)
+    if pageRequest.ok:
+        pageContent = BeautifulSoup(pageRequest.content, 'html.parser')
+
+        # get the category name
+        category = url.split('/')[-2]
+        categoryName = category.split('_')[0]
+
+        # Get all books urls
+        articles = pageContent.findAll('article')
+
+        # Loop in the urls and for each add a new bookInfo line
+        for article in articles:
+            articleUrl = article.find('a')['href'].replace('../../../', 'http://books.toscrape.com/catalogue/')
+            allBooks.append(getBookInfos(articleUrl, categoryName))
+
+        # Test if there is several pages, and if so repeat the operation
+        nextPage = pageContent.find('li', class_='next')
+        if nextPage:
+            # treat next page
+            segments = url.rpartition('/')
+            nextUrl = url.replace(segments[-1], nextPage.find('a')['href'])
+
+            getOnePageInfos(allBooks, nextUrl)
+
+        return allBooks

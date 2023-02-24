@@ -1,14 +1,15 @@
-import oneBookScrape
+import utils
 import datetime
 
 # Script launch
-url = 'https://books.toscrape.com/catalogue/olio_984/index.html'
+url = 'https://books.toscrape.com/catalogue/category/books/childrens_11/index.html'
 
-oneBookInfos = oneBookScrape.getBookInfos(url, 'categoryTest')
+allBooks = []
 
-date = datetime.datetime.now().strftime('%Y-%m-%d')
+oneCategoryInfos = utils.getOnePageInfos(allBooks, url)
 
 # Write the csv
+date = datetime.datetime.now().strftime('%Y-%m-%d')
 with open('out/' + date + '-oneBookDatas.csv', 'w') as file:
     file.write(
         'product_page_url;'
@@ -22,8 +23,9 @@ with open('out/' + date + '-oneBookDatas.csv', 'w') as file:
         'review_rating;'
         'image_url\n'
     )
-    for key, value in oneBookInfos.items():
-        file.write(value + ';')
-    file.write('\n')
+    for oneBookInfos in oneCategoryInfos:
+        for key, value in oneBookInfos.items():
+            file.write(value + ';')
+        file.write('\n')
 
 print('done')
