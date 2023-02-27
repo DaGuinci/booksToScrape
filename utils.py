@@ -1,6 +1,7 @@
 import re
 from bs4 import BeautifulSoup
 import requests
+import os
 
 # Use the rating tag css class to get the rating value
 def getStarRating(c):
@@ -28,6 +29,7 @@ def getTableItem(table, entry):
 
 # Get each infos from product page in a dictionary
 def getBookInfos(productUrl, categoryName):
+
     bookPageRequest = requests.get(productUrl)
     if bookPageRequest.ok:
         c = BeautifulSoup(bookPageRequest.content, 'html.parser')
@@ -57,6 +59,22 @@ def getBookInfos(productUrl, categoryName):
             'review_rating': getStarRating(c),
             'image_url': c.find('img')['src'].replace('../../', 'http://books.toscrape.com/')
         }
+
+        # download the book's image
+        if not os.path.exists('out/images/'):
+            os.mkdir('out/images/')
+        if not os.path.exists('out/images/' + infos['category']):
+            os.mkdir('out/images/' + infos['category'])
+
+        imgData = requests.get(infos['image_url']).content
+        imgName = infos['title'].replace('"', '')
+        imgName = imgName.replace(' ', '_')
+        imgName = imgName.replace('\'', '')
+        imgName = imgName.replace('/', '-')
+
+        with open(f"out/images/{infos['category']}/{imgName}.jpg", "wb+") as f:
+            f.write(imgData)
+
         return infos
 
 def getOnePageInfos(allBooks, url):
