@@ -35,17 +35,18 @@ def getBookInfos(productUrl, categoryName):
         c = BeautifulSoup(bookPageRequest.content, 'html.parser')
         table = c.find('table')
 
+        # Get and transform book description
         if c.select('#product_description'):
             description = c.select('#product_description')[0].find_next('p').string
             description = description.replace(';', ':')
             description = description.replace('\n', '')
             description = description.replace('"', '”')
-
         else:
             description = 'NC'
 
-        priceIncl = re.sub('Â£', '', getTableItem(table, 'Price (incl. tax)'))
-        priceExcl = re.sub('Â£', '', getTableItem(table, 'Price (excl. tax)'))
+        # Get and transform book prices
+        priceIncl = re.sub('Â£', '', getTableItem(table, "Price (incl. tax)"))
+        priceExcl = re.sub('Â£', '', getTableItem(table, "Price (excl. tax)"))
 
         infos = {
             'product_page_url': productUrl,
@@ -60,7 +61,7 @@ def getBookInfos(productUrl, categoryName):
             'image_url': c.find('img')['src'].replace('../../', 'http://books.toscrape.com/')
         }
 
-        # download the book's image
+        # Download the book's image
         if not os.path.exists('out/images/'):
             os.mkdir('out/images/')
         if not os.path.exists('out/images/' + infos['category']):
@@ -112,21 +113,17 @@ def getAllCategoriesBooks(url):
         allBooks = []
         soup = BeautifulSoup(r.content, 'html.parser')
 
-        # get all the categories urls
+        # Get all the categories urls
         categoryEntries = soup.find('div', class_='side_categories').findAll('li')
 
-        # Delete the first item, Books, all books without category
+        # Delete the first item, named Books, referring to all books without category
         categoryEntries.pop(0)
         i = 0
 
+        # Browse all categories
         for entry in categoryEntries:
             linkTag = entry.find('a')
             categoryUrl = url + linkTag['href']
             getOnePageInfos(allBooks, categoryUrl)
-
-            # test any category
-            # if i < 2:
-            #     getOnePageInfos(allBooks, categoryUrl)
-            # i += 1
 
         return allBooks

@@ -1,13 +1,20 @@
 import utils
 import datetime
+import os
 
-# Script launch
+# Launch the script
 url = 'http://books.toscrape.com/'
 
 allBooks = utils.getAllCategoriesBooks(url)
 
 # Write the csv
 date = datetime.datetime.now().strftime('%Y-%m-%d')
+
+# Create an output folder if doesn't exist
+if not os.path.exists('out/'):
+    os.mkdir('out/')
+
+# Load datas in the created folder
 with open('out/' + date + '-oneBookDatas.csv', 'w') as file:
     file.write(
         'product_page_url;'
@@ -26,5 +33,3 @@ with open('out/' + date + '-oneBookDatas.csv', 'w') as file:
         for key, value in oneBook.items():
             file.write(value + ';')
         file.write('\n')
-
-print('done')
