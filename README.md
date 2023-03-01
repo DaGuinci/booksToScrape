@@ -1,4 +1,4 @@
-# Python script to scrape books data from http://books.toscrape.com/ website
+# Python script to scrape books datas from http://books.toscrape.com/ website
 
 ## Environment
 

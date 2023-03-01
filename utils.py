@@ -118,7 +118,6 @@ def getAllCategoriesBooks(url):
 
         # Delete the first item, named Books, referring to all books without category
         categoryEntries.pop(0)
-        i = 0
 
         # Browse all categories
         for entry in categoryEntries:
