@@ -5,14 +5,14 @@ import os
 # Launch the script
 url = 'http://books.toscrape.com/'
 
+# Create an output folder if doesn't exist
+if not os.path.exists('out/'):
+    os.mkdir('out/')
+
 allBooks = utils.getAllCategoriesBooks(url)
 
 # Write the csv
 date = datetime.datetime.now().strftime('%Y-%m-%d')
-
-# Create an output folder if doesn't exist
-if not os.path.exists('out/'):
-    os.mkdir('out/')
 
 # Load datas in the created folder
 with open('out/' + date + '-oneBookDatas.csv', 'w') as file:
