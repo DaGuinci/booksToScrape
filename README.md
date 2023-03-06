@@ -23,9 +23,9 @@ Or if Windows :
 
 The requirements.txt wil install the packages:
 
-Requests 2.28.1
+- Requests
 
-BeautifulSoup4 4.11.1
+- BeautifulSoup4
 
 ## Execution
 
