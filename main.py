@@ -29,7 +29,6 @@ with open('out/' + date + '-oneBookDatas.csv', 'w') as file:
         'image_url\n'
     )
     for oneBook in allBooks:
-        # print(type(oneBook))
         for key, value in oneBook.items():
             file.write(value + ';')
         file.write('\n')
