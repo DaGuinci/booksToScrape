@@ -3,21 +3,20 @@ from bs4 import BeautifulSoup
 import requests
 import os
 
+
 # Use the rating tag css class to get the rating value
 def getStarRating(c):
     star_rating = c.select('.star-rating')[0]['class'][1]
-    match star_rating:
-        case 'One':
-            return '1'
-        case 'Two':
-            return '2'
-        case 'Three':
-            return '3'
-        case 'Four':
-            return '4'
-        case _:
-            return 'NC'
-
+    if star_rating == 'One':
+        return '1'
+    elif star_rating == 'Two':
+        return '2'
+    elif star_rating == 'Three':
+        return '3'
+    elif star_rating == 'Four':
+        return '4'
+    else:
+        return 'NC'
 
 # Get the value of any item from the product page table
 def getTableItem(table, entry):
@@ -29,7 +28,6 @@ def getTableItem(table, entry):
 
 # Get each infos from product page in a dictionary
 def getBookInfos(productUrl, categoryName):
-
     bookPageRequest = requests.get(productUrl)
     if bookPageRequest.ok:
         c = BeautifulSoup(bookPageRequest.content, 'html.parser')
@@ -77,6 +75,7 @@ def getBookInfos(productUrl, categoryName):
             f.write(imgData)
 
         return infos
+
 
 def getOnePageInfos(allBooks, url):
     pageRequest = requests.get(url)
